@@ -11,21 +11,53 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // STEP 1: username + password -> if correct, backend emails an OTP and
+  // returns a short-lived pendingToken (this is NOT a login session yet).
   async function login(username, password) {
     setLoading(true);
     setError(null);
     try {
       const { data } = await api.post("/auth/login", { username, password });
-      localStorage.setItem("sms_token", data.token);
-      localStorage.setItem("sms_user", JSON.stringify(data.user));
-      setUser(data.user);
-      return true;
+      return { ok: true, pendingToken: data.pendingToken, maskedEmail: data.maskedEmail, expiresInSeconds: data.expiresInSeconds };
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-      return false;
+      const message = err.response?.data?.message || "Login failed";
+      setError(message);
+      return { ok: false, message };
     } finally {
       setLoading(false);
     }
+  }
+
+  // STEP 2: pendingToken + the 6-digit code -> real access token = actually logged in.
+  async function verifyOtp(pendingToken, otp) {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.post("/auth/verify-otp", { pendingToken, otp });
+      localStorage.setItem("sms_token", data.token);
+      localStorage.setItem("sms_user", JSON.stringify(data.user));
+      setUser(data.user);
+      return { ok: true };
+    } catch (err) {
+      const message = err.response?.data?.message || "Verification failed";
+      setError(message);
+      return { ok: false, message };
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function resendOtp(pendingToken) {
+    try {
+      const { data } = await api.post("/auth/resend-otp", { pendingToken });
+      return { ok: true, expiresInSeconds: data.expiresInSeconds };
+    } catch (err) {
+      return { ok: false, message: err.response?.data?.message || "Couldn't resend code" };
+    }
+  }
+
+  function clearError() {
+    setError(null);
   }
 
   function logout() {
@@ -35,7 +67,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, loading, error }}>
+    <AuthContext.Provider value={{ user, login, verifyOtp, resendOtp, logout, loading, error, clearError }}>
       {children}
     </AuthContext.Provider>
   );

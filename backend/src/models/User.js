@@ -5,7 +5,14 @@ const userSchema = new mongoose.Schema(
   {
     username: { type: String, required: true, unique: true, trim: true, lowercase: true },
     password: { type: String, required: true },
+    email: { type: String, required: true, trim: true, lowercase: true },
     role: { type: String, enum: ["admin"], default: "admin" },
+
+    // --- OTP (email verification) fields ---
+    otpHash: { type: String, default: null, select: false },
+    otpExpires: { type: Date, default: null, select: false },
+    otpAttempts: { type: Number, default: 0, select: false },
+    lastOtpSentAt: { type: Date, default: null, select: false },
   },
   { timestamps: true },
 );
