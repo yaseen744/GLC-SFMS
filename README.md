@@ -77,3 +77,86 @@ App runs at `http://localhost:5173`.
 - WhatsApp is click-to-chat only (wa.me links) — no automated/bulk sending yet
 - No pagination on the students table (fine for small schools, worth adding for large ones)
 - Single admin role only — no multi-user/permission levels yet
+
+## 5. Deploy to Vercel (Full Stack)
+
+This project is prepared for Vercel with:
+- React + Vite frontend
+- Node.js + Express backend
+- MongoDB Atlas database
+
+### A. Push to GitHub safely
+
+Do **not** push `.env` files. They are ignored by `.gitignore`.
+
+Create your local files from the examples:
+
+Backend:
+```bash
+cd backend
+copy .env.example .env
+```
+
+Frontend:
+```bash
+cd frontend
+copy .env.example .env
+```
+
+Put your real MongoDB Atlas URI and secrets in `backend/.env`.
+
+> If a MongoDB password or other secret was ever committed to GitHub, change/rotate it before using production. Removing the `.env` file from a new commit does not remove old secrets from Git history.
+
+### B. Deploy the backend
+
+1. In Vercel choose **Add New → Project**.
+2. Import this same GitHub repository.
+3. Set **Root Directory** to `backend`.
+4. Framework Preset can be **Other**.
+5. Leave Build Command and Output Directory at their defaults.
+6. Add these Environment Variables from `backend/.env`:
+   - `MONGO_URI`
+   - `JWT_SECRET`
+   - `ADMIN_USERNAME`
+   - `ADMIN_PASSWORD`
+7. Deploy.
+
+After deployment, test:
+```text
+https://YOUR-BACKEND.vercel.app/api/health
+```
+
+It should return:
+```json
+{"ok":true}
+```
+
+### C. Deploy the frontend
+
+Create another Vercel project using the **same GitHub repository**.
+
+1. Import the repository again.
+2. Set **Root Directory** to `frontend`.
+3. Framework Preset: **Vite**.
+4. Add this Environment Variable:
+   - `VITE_API_URL` = `https://YOUR-BACKEND.vercel.app/api`
+5. Deploy.
+
+The frontend already includes a Vercel SPA rewrite so React Router routes such as `/dashboard`, `/students`, and `/reports` work after refresh.
+
+### D. Database
+
+MongoDB itself is not deployed to Vercel. Keep the database on MongoDB Atlas and put its connection string in Vercel's backend Environment Variables as `MONGO_URI`.
+
+You do not need a separate database deployment on Vercel.
+
+### E. Admin login
+
+The admin account is created with:
+```bash
+cd backend
+npm run seed:admin
+```
+
+For production, run the seed command once with the same production environment variables, or create the admin user through your existing database setup. Do not use the example password in production.
+

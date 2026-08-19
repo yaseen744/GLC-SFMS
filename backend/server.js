@@ -29,8 +29,18 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal server error" });
 });
 
-const PORT = process.env.PORT || 5000;
+// Vercel detects the default export and runs this Express app.
+// For local development, start a normal Node server.
+export default app;
 
-connectDB().then(() => {
-  app.listen(PORT, () => console.log(`🚀 API running on http://localhost:${PORT}`));
-});
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+
+  connectDB()
+    .then(() => {
+      app.listen(PORT, () =>
+        console.log(`🚀 API running on http://localhost:${PORT}`)
+      );
+    })
+    .catch(() => process.exit(1));
+}
