@@ -43,6 +43,30 @@ export default {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-8px)" },
         },
+        shake: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "20%": { transform: "translateX(-6px)" },
+          "40%": { transform: "translateX(6px)" },
+          "60%": { transform: "translateX(-4px)" },
+          "80%": { transform: "translateX(4px)" },
+        },
+        slideInRight: {
+          "0%": { opacity: 0, transform: "translateX(24px)" },
+          "100%": { opacity: 1, transform: "translateX(0)" },
+        },
+        slideOutLeft: {
+          "0%": { opacity: 1, transform: "translateX(0)" },
+          "100%": { opacity: 0, transform: "translateX(-24px)" },
+        },
+        checkPop: {
+          "0%": { opacity: 0, transform: "scale(0.4)" },
+          "60%": { opacity: 1, transform: "scale(1.15)" },
+          "100%": { opacity: 1, transform: "scale(1)" },
+        },
+        ringPulse: {
+          "0%": { boxShadow: "0 0 0 0 rgba(99,102,241,0.35)" },
+          "100%": { boxShadow: "0 0 0 14px rgba(99,102,241,0)" },
+        },
       },
       animation: {
         fadeIn: "fadeIn 0.35s ease-out both",
@@ -51,6 +75,11 @@ export default {
         shimmer: "shimmer 1.6s infinite linear",
         blob: "blob 9s infinite ease-in-out",
         floatSlow: "floatSlow 4s ease-in-out infinite",
+        shake: "shake 0.4s ease-in-out",
+        slideInRight: "slideInRight 0.35s cubic-bezier(0.22,1,0.36,1) both",
+        slideOutLeft: "slideOutLeft 0.25s cubic-bezier(0.22,1,0.36,1) both",
+        checkPop: "checkPop 0.5s cubic-bezier(0.22,1,0.36,1) both",
+        ringPulse: "ringPulse 1.6s ease-out infinite",
       },
     },
   },
