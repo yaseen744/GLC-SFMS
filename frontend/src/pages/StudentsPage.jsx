@@ -110,81 +110,160 @@ export default function StudentsPage({ lockedClass = null, title, subtitle }) {
               No students found.
             </div>
           ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-slate-500 border-b border-slate-100 bg-slate-50/50">
-                  <th className="px-5 py-3 font-medium">Code</th>
-                  <th className="px-5 py-3 font-medium">Name</th>
-                  <th className="px-5 py-3 font-medium">Class</th>
-                  <th className="px-5 py-3 font-medium">Monthly Fee</th>
-                  <th className="px-5 py-3 font-medium">Status</th>
-                  <th className="px-5 py-3 font-medium text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+            <>
+              {/* Mobile: stacked cards (below sm breakpoint) — nothing gets clipped since
+                  there's no wide row to overflow. */}
+              <div className="sm:hidden divide-y divide-slate-50">
                 {filtered.map((s) => {
                   const waLink = buildWhatsappLink(s.parentWhatsapp, buildFeeReminderMessage(s));
                   return (
-                    <tr
-                      key={s._id}
-                      className="border-b border-slate-50 last:border-0 hover:bg-slate-50/60 transition-colors animate-fadeIn"
-                    >
-                      <td className="px-5 py-3 font-mono text-xs text-slate-500">{s.studentCode}</td>
-                      <td className="px-5 py-3">
-                        <Link to={`/students/${s._id}`} className="font-medium text-slate-900 hover:text-primary-600 transition-colors">
-                          {s.name}
-                        </Link>
-                        <div className="text-xs text-slate-400">{s.fatherName}</div>
-                      </td>
-                      <td className="px-5 py-3 text-slate-600">{s.class}</td>
-                      <td className="px-5 py-3 text-slate-600">
-                        {new Intl.NumberFormat("en-PK").format(s.monthlyFee)} PKR
-                      </td>
-                      <td className="px-5 py-3">
+                    <div key={s._id} className="p-4 animate-fadeIn">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <Link
+                            to={`/students/${s._id}`}
+                            className="font-semibold text-slate-900 hover:text-primary-600 transition-colors truncate block"
+                          >
+                            {s.name}
+                          </Link>
+                          <div className="text-xs text-slate-400 mt-0.5">{s.fatherName}</div>
+                        </div>
                         <span
-                          className={`pill ${
-                            s.status === "active"
-                              ? "bg-emerald-50 text-emerald-700"
-                              : "bg-slate-100 text-slate-500"
+                          className={`pill shrink-0 ${
+                            s.status === "active" ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"
                           }`}
                         >
                           <span className={`pill-dot ${s.status === "active" ? "bg-emerald-500" : "bg-slate-400"}`} />
                           {s.status}
                         </span>
-                      </td>
-                      <td className="px-5 py-3 text-right">
-                        <div className="inline-flex items-center gap-1">
-                          {waLink && (
-                            <a
-                              href={waLink}
-                              target="_blank"
-                              rel="noreferrer"
-                              title="Message parent on WhatsApp"
-                              className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all hover:scale-110"
-                            >
-                              <MessageCircle className="h-4 w-4" />
-                            </a>
-                          )}
-                          <button
-                            onClick={() => setEditingStudent(s)}
-                            title="Edit student"
-                            className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all hover:scale-110"
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(s._id)}
-                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all hover:scale-110"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
+                      </div>
+
+                      <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
+                        <div>
+                          <div className="text-slate-400">Code</div>
+                          <div className="font-mono text-slate-600 mt-0.5">{s.studentCode}</div>
                         </div>
-                      </td>
-                    </tr>
+                        <div>
+                          <div className="text-slate-400">Class</div>
+                          <div className="text-slate-600 mt-0.5">{s.class}</div>
+                        </div>
+                        <div>
+                          <div className="text-slate-400">Monthly Fee</div>
+                          <div className="text-slate-600 mt-0.5">{new Intl.NumberFormat("en-PK").format(s.monthlyFee)} PKR</div>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-end gap-1 -mr-2">
+                        {waLink && (
+                          <a
+                            href={waLink}
+                            target="_blank"
+                            rel="noreferrer"
+                            title="Message parent on WhatsApp"
+                            className="p-2.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all active:scale-95"
+                          >
+                            <MessageCircle className="h-4 w-4" />
+                          </a>
+                        )}
+                        <button
+                          onClick={() => setEditingStudent(s)}
+                          title="Edit student"
+                          className="p-2.5 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all active:scale-95"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(s._id)}
+                          className="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all active:scale-95"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
+              </div>
+
+              {/* Desktop / tablet: full table, horizontally scrollable as a fallback
+                  so nothing is ever clipped even at in-between widths. */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left text-slate-500 border-b border-slate-100 bg-slate-50/50">
+                      <th className="px-5 py-3 font-medium whitespace-nowrap">Code</th>
+                      <th className="px-5 py-3 font-medium whitespace-nowrap">Name</th>
+                      <th className="px-5 py-3 font-medium whitespace-nowrap">Class</th>
+                      <th className="px-5 py-3 font-medium whitespace-nowrap">Monthly Fee</th>
+                      <th className="px-5 py-3 font-medium whitespace-nowrap">Status</th>
+                      <th className="px-5 py-3 font-medium text-right whitespace-nowrap">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((s) => {
+                      const waLink = buildWhatsappLink(s.parentWhatsapp, buildFeeReminderMessage(s));
+                      return (
+                        <tr
+                          key={s._id}
+                          className="border-b border-slate-50 last:border-0 hover:bg-slate-50/60 transition-colors animate-fadeIn"
+                        >
+                          <td className="px-5 py-3 font-mono text-xs text-slate-500 whitespace-nowrap">{s.studentCode}</td>
+                          <td className="px-5 py-3 whitespace-nowrap">
+                            <Link to={`/students/${s._id}`} className="font-medium text-slate-900 hover:text-primary-600 transition-colors">
+                              {s.name}
+                            </Link>
+                            <div className="text-xs text-slate-400">{s.fatherName}</div>
+                          </td>
+                          <td className="px-5 py-3 text-slate-600 whitespace-nowrap">{s.class}</td>
+                          <td className="px-5 py-3 text-slate-600 whitespace-nowrap">
+                            {new Intl.NumberFormat("en-PK").format(s.monthlyFee)} PKR
+                          </td>
+                          <td className="px-5 py-3 whitespace-nowrap">
+                            <span
+                              className={`pill ${
+                                s.status === "active"
+                                  ? "bg-emerald-50 text-emerald-700"
+                                  : "bg-slate-100 text-slate-500"
+                              }`}
+                            >
+                              <span className={`pill-dot ${s.status === "active" ? "bg-emerald-500" : "bg-slate-400"}`} />
+                              {s.status}
+                            </span>
+                          </td>
+                          <td className="px-5 py-3 text-right whitespace-nowrap">
+                            <div className="inline-flex items-center gap-1">
+                              {waLink && (
+                                <a
+                                  href={waLink}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  title="Message parent on WhatsApp"
+                                  className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all hover:scale-110"
+                                >
+                                  <MessageCircle className="h-4 w-4" />
+                                </a>
+                              )}
+                              <button
+                                onClick={() => setEditingStudent(s)}
+                                title="Edit student"
+                                className="p-2 text-slate-400 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all hover:scale-110"
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDelete(s._id)}
+                                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all hover:scale-110"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
       </div>

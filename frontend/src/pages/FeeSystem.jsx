@@ -157,8 +157,8 @@ export default function FeeSystem() {
               No students match this search/filter.
             </div>
           ) : (
-            <div className="max-h-[65vh] overflow-y-auto">
-              <table className="w-full text-sm">
+            <div className="max-h-[65vh] overflow-y-auto overflow-x-auto">
+              <table className="w-full text-sm min-w-[720px]">
                 <thead className="sticky top-0 z-10">
                   <tr className="text-left text-slate-500 border-b border-slate-100 bg-slate-50/95 backdrop-blur">
                     <th className="px-5 py-3 font-medium">Code</th>

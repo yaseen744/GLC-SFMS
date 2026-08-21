@@ -116,7 +116,8 @@ export default function StudentDetail() {
           {fees.length === 0 ? (
             <div className="p-8 text-center text-slate-400 text-sm">No fee records yet.</div>
           ) : (
-            <table className="w-full text-sm">
+            <div className="overflow-x-auto">
+            <table className="w-full text-sm min-w-[600px]">
               <thead>
                 <tr className="text-left text-slate-500 border-b border-slate-100 bg-slate-50/50">
                   <th className="px-5 py-3 font-medium">Period</th>
@@ -176,6 +177,7 @@ export default function StudentDetail() {
                 })}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       </div>

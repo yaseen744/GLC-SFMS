@@ -78,10 +78,10 @@ export function OtpInput({ length = 6, value, onChange, disabled, error }) {
           onChange={(e) => handleChange(e, i)}
           onKeyDown={(e) => handleKeyDown(e, i)}
           className={`h-12 w-10 sm:h-14 sm:w-12 rounded-xl border-2 bg-slate-50 text-center text-xl font-bold text-slate-800 outline-none transition-all duration-150
-            focus:bg-white focus:scale-105 focus:shadow-lg focus:shadow-primary-500/10
+            focus:bg-white focus:scale-105 focus:shadow-lg focus:shadow-gold-500/10
             disabled:opacity-60
-            ${error ? "border-red-300 bg-red-50 animate-shake" : "border-slate-200 focus:border-primary-500"}
-            ${value[i] ? "border-primary-300 bg-primary-50/40" : ""}`}
+            ${error ? "border-red-300 bg-red-50 animate-shake" : "border-slate-200 focus:border-gold-400"}
+            ${value[i] ? "border-gold-300 bg-gold-50/40" : ""}`}
         />
       ))}
     </div>
